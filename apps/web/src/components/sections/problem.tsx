@@ -4,12 +4,12 @@ const PROBLEMS = [
   {
     icon: "/icons/file_check_regular.svg",
     title: "The Credential Crisis",
-    body: "Due to a lack of rigorous verification for MDCN registrations or HEFAMAA accreditations on existing platforms, Nigerian patients must rely on unverified listings and word-of-mouth, leaving their health to chance.",
+    body: "Due to a lack of rigorous verification for MDCN registrations or HEFAMAA accreditations on existing platforms, patients must rely on unverified listings and word-of-mouth, leaving their health to chance.",
   },
   {
     icon: "/icons/user_search_regular.svg",
     title: "Healthcare is Hidden",
-    body: "Beyond the doctor shortage, the more immediate issue is the invisibility of qualified practitioners, leaving Nigerian patients unable to locate neighborhood-specific specialists, view their live availability, or see fees upfront.",
+    body: "Beyond the doctor shortage, the more immediate issue is the invisibility of qualified practitioners, leaving patients unable to locate neighborhood-specific specialists, view their live availability, or see fees upfront.",
   },
   {
     icon: "/icons/plugin_2_regular.svg",
@@ -19,7 +19,7 @@ const PROBLEMS = [
   {
     icon: "/icons/unlink_2_regular.svg",
     title: "The Disconnected Ecosystem",
-    body: "This lack of digital connectivity also affects highly qualified Nigerian practitioners, who face unfilled appointment slots simply because they lack a dedicated channel to reach and coordinate with patients needing their care.",
+    body: "This lack of digital connectivity also affects highly qualified practitioners, who face unfilled appointment slots simply because they lack a dedicated channel to reach and coordinate with patients needing their care.",
   },
 ];
 
@@ -36,7 +36,7 @@ export function Problem() {
               Healthcare
             </>
           }
-          subtitle="Nigeria faces a massive doctor-to-patient ratio (1 per 5,000), but the deeper issue is a “discovery and trust gap”."
+          subtitle="Nigeria faces a massive doctor-to-patient ratio (1 per 5,000), but the deeper issue in Nigeria is a “discovery and trust gap”."
         />
 
         <div className="mt-12 grid gap-x-10 gap-y-12 md:grid-cols-2">

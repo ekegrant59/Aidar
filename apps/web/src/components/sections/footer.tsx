@@ -2,7 +2,6 @@ import { Logo } from "@/components/brand/logo";
 
 const CONTACT = [
   { label: "getaidaar@gmail.com", href: "mailto:getaidaar@gmail.com" },
-  { label: "+234 704 608 0319", href: "tel:+2347046080319" },
 ];
 
 const SOCIAL = [

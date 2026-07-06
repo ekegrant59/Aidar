@@ -10,9 +10,10 @@ type WaitlistTable = typeof waitlistPatients | typeof waitlistPractitioners;
 @Injectable()
 export class WaitlistService {
   private readonly logger = new Logger(WaitlistService.name);
-  // Dev-only fallback so the position UI works without a database.
+  // Head-start so the waitlist opens at #584 and the counter reads 583+. Real
+  // signups are added on top of this seed (positions and total both include it).
+  private static readonly SEED_POSITION = 583;
   private fallbackCounter = 0;
-  private static readonly SEED_POSITION = 137;
 
   constructor(
     @Inject(DB) private readonly db: Database | null,
@@ -22,13 +23,15 @@ export class WaitlistService {
   async join(data: WaitlistData): Promise<WaitlistSuccessResponse> {
     if (!this.db) return this.joinWithoutDb(data);
 
-    const { result, isPatient } = await this.persist(this.db, data);
+    const { result, isPatient, rank } = await this.persist(this.db, data);
 
     // Only a genuinely new signup triggers emails (confirmation if opted in, plus
     // the admin lead). A duplicate email is a no-op: no row inserted, no email
     // sent. The response still carries alreadyJoined + the existing position so
     // the UI can show "you're already on the list".
     if (!result.alreadyJoined) {
+      // Admin sees the REAL numbers (rank + total signups), not the seeded ones.
+      const totalSignups = await this.rawTotal(this.db);
       await Promise.allSettled([
         data.notifyByEmail
           ? this.email.sendConfirmation({
@@ -45,7 +48,8 @@ export class WaitlistService {
           role: data.role,
           location: data.location,
           specialty: this.specialtyOf(data),
-          position: result.position,
+          position: rank,
+          totalSignups,
         }),
       ]);
     }
@@ -85,8 +89,20 @@ export class WaitlistService {
 
     // Position is computed entirely in SQL (keyed by email) so it works for both
     // a fresh insert and a duplicate, and avoids JS rounding the row's timestamp.
-    const position = await this.positionByEmail(db, table, data.email);
-    return { result: { position, alreadyJoined: inserted.length === 0 }, isPatient };
+    // Offset by the seed so real signups continue from the head-start number.
+    const rank = await this.positionByEmail(db, table, data.email);
+    const position = WaitlistService.SEED_POSITION + rank;
+    return { result: { position, alreadyJoined: inserted.length === 0 }, isPatient, rank };
+  }
+
+  /** Real total signups (no seed) — for admin-facing numbers. */
+  private async rawTotal(db: Database): Promise<number> {
+    const rows = (await db.execute(sql`
+      select
+        (select count(*) from ${waitlistPatients}) +
+        (select count(*) from ${waitlistPractitioners}) as total
+    `)) as Array<{ total: number }>;
+    return Number(rows[0]?.total ?? 0);
   }
 
   /** 1-based rank of the row with this email, ordered by signup time. */
@@ -99,15 +115,10 @@ export class WaitlistService {
     return Number(rows[0]?.count ?? 1);
   }
 
-  /** Total people on the waitlist (patients + practitioners). */
+  /** Public-facing total: seed head-start + real signups. */
   async count(): Promise<number> {
     if (!this.db) return WaitlistService.SEED_POSITION + this.fallbackCounter;
-    const rows = (await this.db.execute(sql`
-      select
-        (select count(*) from ${waitlistPatients}) +
-        (select count(*) from ${waitlistPractitioners}) as total
-    `)) as Array<{ total: number }>;
-    return Number(rows[0]?.total ?? 0);
+    return WaitlistService.SEED_POSITION + (await this.rawTotal(this.db));
   }
 
   private async joinWithoutDb(data: WaitlistData): Promise<WaitlistSuccessResponse> {
@@ -132,7 +143,8 @@ export class WaitlistService {
         role: data.role,
         location: data.location,
         specialty: this.specialtyOf(data),
-        position,
+        position: this.fallbackCounter,
+        totalSignups: this.fallbackCounter,
       }),
     ]);
     return { ok: true, position, role: data.role, alreadyJoined: false };

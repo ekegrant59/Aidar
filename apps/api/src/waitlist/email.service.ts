@@ -36,7 +36,10 @@ export interface AdminLeadArgs {
   role: WaitlistRole;
   location: string;
   specialty?: string;
+  /** Real signup rank (not the seeded public number). */
   position: number;
+  /** Real total signups so far (not seeded). */
+  totalSignups: number;
 }
 
 @Injectable()
@@ -85,7 +88,7 @@ export class EmailService {
       ["Role", lead.role],
       ["Location", lead.location],
       ...(lead.specialty ? [["Specialty", lead.specialty]] : []),
-      ["Position", `#${lead.position}`],
+      ["Signup #", `${lead.position} (real)`],
     ]
       .map(
         ([k, v]) =>
@@ -94,7 +97,10 @@ export class EmailService {
       .join("");
 
     const html = shell(`
-      <h1 style="font-size:18px;margin:0 0 16px;color:${SPRUCE};">New ${lead.role} waitlist signup</h1>
+      <h1 style="font-size:18px;margin:0 0 6px;color:${SPRUCE};">New ${lead.role} waitlist signup</h1>
+      <p style="margin:0 0 16px;font-size:14px;color:${CORAL};font-weight:700;">
+        ${lead.totalSignups} ${lead.totalSignups === 1 ? "signup" : "signups"} now (real count)
+      </p>
       <table style="width:100%;border-collapse:collapse;font-size:14px;">${rows}</table>
     `);
 
