@@ -32,7 +32,6 @@ export interface ConfirmationArgs {
 export interface AdminLeadArgs {
   fullName: string;
   email: string;
-  phone: string;
   role: WaitlistRole;
   location: string;
   specialty?: string;
@@ -84,7 +83,6 @@ export class EmailService {
     const rows = [
       ["Name", lead.fullName],
       ["Email", lead.email],
-      ["Phone", lead.phone],
       ["Role", lead.role],
       ["Location", lead.location],
       ...(lead.specialty ? [["Specialty", lead.specialty]] : []),

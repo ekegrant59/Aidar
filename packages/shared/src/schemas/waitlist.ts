@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { WAITLIST_ROLES, SPECIALTIES } from "../constants";
-import { isValidNigerianPhone, normalizeNigerianPhone } from "../phone";
 
 const fullName = z
   .string({ required_error: "Please enter your full name" })
@@ -14,12 +13,6 @@ const email = z
   .toLowerCase()
   .email("Please enter a valid email address")
   .max(254, "That email is too long");
-
-const phone = z
-  .string({ required_error: "Please enter your phone number" })
-  .trim()
-  .refine(isValidNigerianPhone, "Enter a valid Nigerian phone number")
-  .transform((v) => normalizeNigerianPhone(v) as string);
 
 const location = z
   .string({ required_error: "Please enter your location" })
@@ -36,7 +29,6 @@ export const waitlistSchema = z
   .object({
     fullName,
     email,
-    phone,
     role: z.enum(WAITLIST_ROLES, {
       required_error: "Please tell us who you are",
       invalid_type_error: "Please tell us who you are",

@@ -8,6 +8,13 @@
       "when": 1782488240429,
       "tag": "0000_sad_rogue",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1783354422501,
+      "tag": "0001_pink_lockjaw",
+      "breakpoints": true
     }
   ]
 }

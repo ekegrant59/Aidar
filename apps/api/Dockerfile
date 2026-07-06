@@ -50,4 +50,6 @@ USER nodeapp
 EXPOSE 4000
 ENV PORT=4000
 # Health: GET /api/health
-CMD ["node", "apps/api/dist/main.js"]
+# Apply any pending migrations (idempotent) before starting the server, so a
+# fresh deploy self-migrates with no manual step or pre-deploy command.
+CMD ["sh", "-c", "node apps/api/dist/db/migrate.js && node apps/api/dist/main.js"]

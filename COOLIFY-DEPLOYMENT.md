@@ -152,26 +152,25 @@ Nothing to create, just make sure they're committed and pushed.
 
 4. **Deploy.**
 
-### Run migrations (once per schema change)
+### Migrations run automatically
 
-The runtime image includes a migrator that uses `drizzle-orm` (a prod dep) and
-the committed `apps/api/drizzle/*.sql` files. Two ways to run it:
+Nothing to configure. The API container's start command applies any pending
+migrations before booting:
 
-- **Recommended, Coolify "Pre-deployment Command"** (Application → Settings):
+```
+node apps/api/dist/db/migrate.js && node apps/api/dist/main.js
+```
 
-  ```
-  node apps/api/dist/db/migrate.js
-  ```
+The migrator uses `drizzle-orm` (a prod dep) and the committed
+`apps/api/drizzle/*.sql` files, and is idempotent (already-applied migrations are
+skipped), so every deploy self-migrates. If a migration fails, the container
+fails to start (and Coolify retries) rather than serving against a stale schema.
 
-  Coolify runs this in a one-off container of the freshly built image before
-  swapping traffic, so the schema is always migrated before the new code serves.
+To run one manually against the prod DB (rarely needed):
 
-- **Manual one-off**, open a terminal on the running container and run the same
-  command, or run it locally against the prod `DATABASE_URL`:
-
-  ```bash
-  pnpm --filter @aidar/api db:migrate   # uses drizzle-kit (dev) locally
-  ```
+```bash
+pnpm --filter @aidar/api db:migrate   # uses drizzle-kit (dev) locally
+```
 
 Verify:
 

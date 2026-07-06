@@ -39,7 +39,6 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
     defaultValues: {
       fullName: "",
       email: "",
-      phone: "",
       role: undefined,
       location: "",
       notifyByEmail: true,
@@ -116,22 +115,6 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           {...register("email")}
         />
         {errors.email && <p className={errorCls}>{errors.email.message}</p>}
-      </div>
-
-      <div>
-        <label htmlFor="phone" className={labelCls}>
-          Phone number
-        </label>
-        <input
-          id="phone"
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-          placeholder="0803 123 4567"
-          className={inputCls}
-          {...register("phone")}
-        />
-        {errors.phone && <p className={errorCls}>{errors.phone.message}</p>}
       </div>
 
       <div>

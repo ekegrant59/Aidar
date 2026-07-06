@@ -44,7 +44,6 @@ export class WaitlistService {
         this.email.sendAdminLead({
           fullName: data.fullName,
           email: data.email,
-          phone: data.phone,
           role: data.role,
           location: data.location,
           specialty: this.specialtyOf(data),
@@ -79,7 +78,6 @@ export class WaitlistService {
       .values({
         fullName: data.fullName,
         email: data.email,
-        phone: data.phone,
         location: data.location,
         notifyByEmail: data.notifyByEmail,
         ...(isPatient ? {} : { specialty: this.specialtyOf(data) }),
@@ -139,7 +137,6 @@ export class WaitlistService {
       this.email.sendAdminLead({
         fullName: data.fullName,
         email: data.email,
-        phone: data.phone,
         role: data.role,
         location: data.location,
         specialty: this.specialtyOf(data),
