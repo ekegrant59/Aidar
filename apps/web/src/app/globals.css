@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Aidar design tokens: teal (spruce) + coral on a warm linen canvas. */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-canvas: #fbf9f4;
+  --color-surface: #ffffff;
+
+  /* Brand: spruce (teal) */
+  --color-spruce-900: #0b4242;
+  --color-spruce-700: #0f5757;
+  --color-spruce-50: #e7f0ef;
+
+  /* Action: coral CTA */
+  --color-coral: #b85a41;
+  --color-coral-dark: #a04931;
+  --color-coral-light: #c9755e;
+
+  /* Text */
+  --color-ink: #1a2421;
+  --color-muted: #666666;
+  --color-hero-fg: #e7e7e7;
+
+  --font-sora: var(--ff-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-manrope: var(--ff-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-inter: var(--ff-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-pill: 32px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-manrope);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-sora);
+  }
+
+  ::selection {
+    background-color: var(--color-coral);
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  /* Section horizontal rhythm matching the 1440 / 160px-gutter design. */
+  .section-x {
+    padding-left: clamp(1.25rem, 11vw, 10rem);
+    padding-right: clamp(1.25rem, 11vw, 10rem);
+  }
+
+  /* Nav shares the section gutter on desktop. */
+  .nav-x {
+    padding-left: clamp(1.25rem, 11vw, 10rem);
+    padding-right: clamp(1.25rem, 11vw, 10rem);
+  }
+
+  /* Mobile: tighten horizontal padding, body by ~50%, nav by ~70%. */
+  @media (max-width: 640px) {
+    .section-x {
+      padding-left: clamp(0.625rem, 5.5vw, 10rem);
+      padding-right: clamp(0.625rem, 5.5vw, 10rem);
+    }
+    .nav-x {
+      padding-left: clamp(0.375rem, 3.3vw, 10rem);
+      padding-right: clamp(0.375rem, 3.3vw, 10rem);
+    }
+  }
+
+  .section-y {
+    padding-top: clamp(3.5rem, 8vw, 5rem);
+    padding-bottom: clamp(3.5rem, 8vw, 5rem);
+  }
+}
+
+/* Hero radial / conic glow approximation of the Figma background. */
+.hero-aurora {
+  background:
+    radial-gradient(60% 50% at 50% 0%, rgba(255, 255, 255, 0.12) 0%, transparent 60%),
+    conic-gradient(from 200deg at 0% 0%, rgba(255, 255, 255, 0.16) 0deg, transparent 90deg, transparent 270deg, rgba(255, 255, 255, 0.1) 360deg),
+    conic-gradient(from 20deg at 100% 100%, rgba(255, 255, 255, 0.12) 0deg, transparent 90deg, transparent 270deg, rgba(255, 255, 255, 0.08) 360deg);
+  mix-blend-mode: soft-light;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 110px 110px;
+  mix-blend-mode: overlay;
+}
+
+@keyframes aidar-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: aidar-fade-up 0.5s ease-out both;
+}

@@ -1,0 +1,35 @@
+# Local development infrastructure only (Postgres + Redis).
+# The apps themselves run via `pnpm dev`. In production, Coolify provisions
+# managed Postgres/Redis and deploys the apps from the Dockerfiles.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aidar-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: aidar
+      POSTGRES_PASSWORD: aidar
+      POSTGRES_DB: aidar_waitlist
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aidar -d aidar_waitlist"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Not used in Phase 0 (waitlist). Present for Phase 1+ (BullMQ jobs, caching).
+  redis:
+    image: redis:7-alpine
+    container_name: aidar-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:

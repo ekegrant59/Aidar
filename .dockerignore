@@ -1,0 +1,33 @@
+# Dependencies (reinstalled inside the image)
+node_modules
+**/node_modules
+.pnpm-store
+
+# Build output (regenerated inside the image)
+.next
+**/.next
+dist
+**/dist
+.turbo
+**/.turbo
+*.tsbuildinfo
+
+# Local env & secrets — never bake these into an image
+.env
+.env.*
+!.env.example
+
+# VCS & tooling
+.git
+.gitignore
+*.log
+
+# OS / editor cruft
+.DS_Store
+.vscode
+.idea
+
+# Design assets / docs not needed at build
+designs
+Aidar_icon
+*.pdf
