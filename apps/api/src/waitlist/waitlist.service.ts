@@ -24,8 +24,10 @@ export class WaitlistService {
 
     const { result, isPatient } = await this.persist(this.db, data);
 
-    // New signups get confirmation (if opted in) + admin lead. Duplicates only
-    // re-receive their confirmation so they still learn their spot.
+    // Only a genuinely new signup triggers emails (confirmation if opted in, plus
+    // the admin lead). A duplicate email is a no-op: no row inserted, no email
+    // sent. The response still carries alreadyJoined + the existing position so
+    // the UI can show "you're already on the list".
     if (!result.alreadyJoined) {
       await Promise.allSettled([
         data.notifyByEmail
@@ -46,13 +48,6 @@ export class WaitlistService {
           position: result.position,
         }),
       ]);
-    } else if (data.notifyByEmail) {
-      await this.email.sendConfirmation({
-        to: data.email,
-        fullName: data.fullName,
-        role: data.role,
-        position: result.position,
-      });
     }
 
     return {

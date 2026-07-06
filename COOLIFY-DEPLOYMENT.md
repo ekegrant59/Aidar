@@ -193,20 +193,23 @@ curl https://api.getaidar.com/api/health
    - **Base Directory / Build Context**: `/`
    - **Domain**: `https://getaidar.com`
    - **Port**: `3000`
-3. **Environment Variables**, ⚠️ `NEXT_PUBLIC_*` are inlined at **build time**.
-   In Coolify, add them and toggle **"Build Variable"** (a.k.a. "Available at
-   build time") **ON**, or the browser will hit the wrong API URL:
+3. **Environment Variables.** Set each **value to the bare value only** (no inline
+   comments). Then, for each `NEXT_PUBLIC_*` var, tick the **"Build Variable"** /
+   **"Available at build time"** checkbox in the Coolify UI (it is a checkbox, NOT
+   text you type into the value). `NEXT_PUBLIC_*` are inlined at build time, so if
+   that box is off the browser hits the wrong API URL.
 
-   ```env
-   NODE_ENV=production
-   NEXT_PUBLIC_API_URL=https://api.getaidar.com      # Build Variable = ON
-   NEXT_PUBLIC_SITE_URL=https://getaidar.com         # Build Variable = ON
-   NEXT_PUBLIC_POSTHOG_KEY=phc_xxx                    # Build Variable = ON (optional)
-   NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com  # Build Variable = ON (optional)
-   ```
+   | Variable | Value | Build Variable? |
+   |---|---|---|
+   | `NEXT_PUBLIC_API_URL` | `https://api.getaidar.com` | ✅ ON |
+   | `NEXT_PUBLIC_SITE_URL` | `https://getaidar.com` | ✅ ON |
+   | `NEXT_PUBLIC_POSTHOG_KEY` | `phc_xxx` (optional) | ✅ ON |
+   | `NEXT_PUBLIC_POSTHOG_HOST` | `https://us.i.posthog.com` (optional) | ✅ ON |
+   | `NODE_ENV` | `production` | ❌ Runtime only |
 
-   The Dockerfile declares matching `ARG`s, so Coolify's build variables flow
-   into `next build`.
+   > Do NOT paste "Build Variable = ON" or any `#` comment into a value. The
+   > Dockerfile declares matching `ARG`s, so the checked build variables flow into
+   > `next build`.
 
 4. **Deploy**, then visit `https://getaidar.com`.
 
