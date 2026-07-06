@@ -44,7 +44,7 @@ export class WaitlistService {
           phone: data.phone,
           role: data.role,
           location: data.location,
-          specialty: isPatient ? undefined : data.specialty,
+          specialty: this.specialtyOf(data),
           position: result.position,
         }),
       ]);
@@ -56,6 +56,14 @@ export class WaitlistService {
       role: data.role,
       alreadyJoined: result.alreadyJoined,
     };
+  }
+
+  /** Effective specialty for a practitioner: the typed value when "Other". */
+  private specialtyOf(data: WaitlistData): string | undefined {
+    if (data.role !== "practitioner") return undefined;
+    return data.specialty === "Other"
+      ? data.specialtyOther?.trim() || "Other"
+      : data.specialty;
   }
 
   private async persist(db: Database, data: WaitlistData) {
@@ -70,7 +78,7 @@ export class WaitlistService {
         phone: data.phone,
         location: data.location,
         notifyByEmail: data.notifyByEmail,
-        ...(isPatient ? {} : { specialty: data.specialty }),
+        ...(isPatient ? {} : { specialty: this.specialtyOf(data) }),
       })
       .onConflictDoNothing({ target: table.email })
       .returning({ id: table.id });
@@ -89,6 +97,17 @@ export class WaitlistService {
       where created_at <= (select created_at from ${table} where email = ${email})
     `)) as Array<{ count: number }>;
     return Number(rows[0]?.count ?? 1);
+  }
+
+  /** Total people on the waitlist (patients + practitioners). */
+  async count(): Promise<number> {
+    if (!this.db) return WaitlistService.SEED_POSITION + this.fallbackCounter;
+    const rows = (await this.db.execute(sql`
+      select
+        (select count(*) from ${waitlistPatients}) +
+        (select count(*) from ${waitlistPractitioners}) as total
+    `)) as Array<{ total: number }>;
+    return Number(rows[0]?.total ?? 0);
   }
 
   private async joinWithoutDb(data: WaitlistData): Promise<WaitlistSuccessResponse> {
@@ -112,7 +131,7 @@ export class WaitlistService {
         phone: data.phone,
         role: data.role,
         location: data.location,
-        specialty: data.role === "practitioner" ? data.specialty : undefined,
+        specialty: this.specialtyOf(data),
         position,
       }),
     ]);

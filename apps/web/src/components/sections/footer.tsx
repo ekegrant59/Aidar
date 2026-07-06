@@ -1,17 +1,14 @@
 import { Logo } from "@/components/brand/logo";
 
-// NOTE: contact details below are the placeholders shown in the design file.
-// Swap for Aidar's real email/phone before launch.
 const CONTACT = [
-  { label: "hello@indicis.com", href: "mailto:hello@indicis.com" },
-  { label: "+1 (999) 888-77-66", href: "tel:+19998887766" },
+  { label: "getaidaar@gmail.com", href: "mailto:getaidaar@gmail.com" },
+  { label: "+234 704 608 0319", href: "tel:+2347046080319" },
 ];
 
 const SOCIAL = [
-  { label: "Instagram", href: "#" },
-  { label: "Tiktok", href: "#" },
-  { label: "Linkedin", href: "#" },
-  { label: "X", href: "#" },
+  { label: "Instagram", href: "https://www.instagram.com/getaidar" },
+  { label: "Tiktok", href: "https://www.tiktok.com/@getaidar" },
+  { label: "X", href: "https://x.com/getaidar" },
 ];
 
 export function Footer() {
@@ -24,7 +21,7 @@ export function Footer() {
             <p className="mt-4 text-[16px] leading-relaxed text-spruce-900/60">
               Aidar is a digital healthcare platform designed to bridge the
               discovery and trust gap between patients and medical providers in
-              Lagos, Nigeria.
+              Nigeria.
             </p>
           </div>
 
@@ -55,6 +52,9 @@ function Footercol({
           <li key={l.label}>
             <a
               href={l.href}
+              {...(l.href.startsWith("http")
+                ? { target: "_blank", rel: "noreferrer" }
+                : {})}
               className="text-[14px] font-medium text-spruce-900/90 transition hover:text-coral"
             >
               {l.label}

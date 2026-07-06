@@ -12,40 +12,6 @@ export const WAITLIST_ROLE_LABELS: Record<WaitlistRole, string> = {
   practitioner: "Practitioner: I provide care",
 };
 
-/**
- * Lagos areas / LGAs used for the location field. Kept deliberately Lagos-first
- * for launch; expand as Aidar grows beyond Lagos.
- */
-export const LAGOS_AREAS = [
-  "Agege",
-  "Ajeromi-Ifelodun",
-  "Alimosho",
-  "Amuwo-Odofin",
-  "Apapa",
-  "Badagry",
-  "Epe",
-  "Eti-Osa",
-  "Ibeju-Lekki",
-  "Ifako-Ijaiye",
-  "Ikeja",
-  "Ikorodu",
-  "Kosofe",
-  "Lagos Island",
-  "Lagos Mainland",
-  "Mushin",
-  "Ojo",
-  "Oshodi-Isolo",
-  "Shomolu",
-  "Surulere",
-  "Lekki",
-  "Victoria Island",
-  "Ikoyi",
-  "Yaba",
-  "Gbagada",
-  "Maryland",
-  "Magodo",
-] as const;
-
 /** Practitioner specialties (subset for the waitlist; full list lands in onboarding). */
 export const SPECIALTIES = [
   "General Practitioner",

@@ -3,6 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWaitlist } from "@/components/waitlist/waitlist-provider";
+import { WaitlistCount } from "@/components/waitlist/waitlist-count";
 
 export function Hero() {
   const { open } = useWaitlist();
@@ -47,6 +48,7 @@ export function Hero() {
             Join Waitlist
           </Button>
         </div>
+        <WaitlistCount className="mt-6 text-hero-fg/75" />
       </div>
 
       <button

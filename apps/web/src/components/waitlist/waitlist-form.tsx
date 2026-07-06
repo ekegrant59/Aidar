@@ -47,6 +47,7 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   });
 
   const role = watch("role");
+  const specialty = watch("specialty");
 
   async function onSubmit(values: WaitlistInput) {
     setServerError(null);
@@ -161,7 +162,7 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       {role === "practitioner" && (
         <div className="animate-fade-up">
           <label htmlFor="specialty" className={labelCls}>
-            Specialty <span className="font-normal text-muted">(optional)</span>
+            Specialty
           </label>
           <div className="relative">
             <select
@@ -170,7 +171,9 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
               className={cn(inputCls, "appearance-none pr-11")}
               {...register("specialty")}
             >
-              <option value="">Select your specialty</option>
+              <option value="" disabled>
+                Select your specialty
+              </option>
               {SPECIALTIES.map((s) => (
                 <option key={s} value={s}>
                   {s}
@@ -179,6 +182,25 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
             </select>
             <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-spruce-900/60" />
           </div>
+          {errors.specialty && <p className={errorCls}>{errors.specialty.message}</p>}
+
+          {specialty === "Other" && (
+            <div className="mt-4 animate-fade-up">
+              <label htmlFor="specialtyOther" className={labelCls}>
+                Please specify your specialty
+              </label>
+              <input
+                id="specialtyOther"
+                type="text"
+                placeholder="Your specialty"
+                className={inputCls}
+                {...register("specialtyOther")}
+              />
+              {errors.specialtyOther && (
+                <p className={errorCls}>{errors.specialtyOther.message}</p>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -190,7 +212,7 @@ export function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           id="location"
           type="text"
           autoComplete="address-level2"
-          placeholder="City, State - Ikeja, Lagos"
+          placeholder="City, State"
           className={inputCls}
           {...register("location")}
         />

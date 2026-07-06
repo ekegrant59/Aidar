@@ -34,10 +34,10 @@ export const metadata: Metadata = {
   keywords: [
     "Aidar",
     "Nigeria healthcare",
-    "Lagos doctors",
+    "Nigeria doctors",
     "verified practitioners",
     "book doctor Nigeria",
-    "home care Lagos",
+    "home care Nigeria",
     "telemedicine Nigeria",
   ],
   openGraph: {
