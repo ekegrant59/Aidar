@@ -21,8 +21,10 @@ RUN turbo prune @aidar/api --docker
 # ---- Stage 2: Install deps, build, then drop dev deps ----
 FROM base AS builder
 # Install against the pruned lockfile first for better layer caching.
+# --prod=false forces devDependencies (turbo, @nestjs/cli, tsup) even when the
+# platform injects NODE_ENV=production at build time (e.g. Coolify).
 COPY --from=pruner /app/out/json/ ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod=false
 # Bring in the pruned source and build (@aidar/shared via tsup → @aidar/api via nest).
 COPY --from=pruner /app/out/full/ ./
 RUN pnpm exec turbo build --filter=@aidar/api

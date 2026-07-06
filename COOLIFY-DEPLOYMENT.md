@@ -135,7 +135,10 @@ Nothing to create, just make sure they're committed and pushed.
    - **Domain**: `https://api.getaidar.com`
    - **Port**: `4000`
    - **Health Check Path**: `/api/health`
-3. **Environment Variables** (Runtime):
+3. **Environment Variables** (mark ALL of these **Runtime only** / uncheck
+   "Available at build time"). The API needs none of them at build time, and
+   marking `NODE_ENV` as build-time makes pnpm skip the build tools; marking
+   secrets as build-time bakes them into image layers.
 
    ```env
    NODE_ENV=production
@@ -258,6 +261,7 @@ curl -X POST https://api.getaidar.com/api/v1/waitlist \
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
+| Build fails: `Command "turbo" not found` + log says `devDependencies: skipped because NODE_ENV is set to production` | Coolify injects `NODE_ENV=production` at build time, so pnpm skips dev tools (turbo, @nestjs/cli, tsup) | Dockerfiles install with `pnpm install --prod=false` to force them. Also mark `NODE_ENV` (and all API secrets) as **Runtime only** in Coolify. |
 | Build fails: `turbo: command not found` / workspace not found | Build context isn't the repo root | Set Base Directory / Build Context to `/` |
 | Web build OK but browser calls `localhost:4000` | `NEXT_PUBLIC_API_URL` not a **Build Variable** | Toggle it on, redeploy |
 | CORS error in browser | `WEB_ORIGIN` on the API doesn't match the web domain | Set `WEB_ORIGIN=https://getaidar.com`, redeploy API |

@@ -19,7 +19,9 @@ COPY apps/web/package.json ./apps/web/
 COPY apps/api/package.json ./apps/api/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/config/package.json ./packages/config/
-RUN pnpm install --frozen-lockfile
+# --prod=false forces devDependencies (next, tailwind, tsup, typescript) even when
+# the platform injects NODE_ENV=production at build time (e.g. Coolify).
+RUN pnpm install --frozen-lockfile --prod=false
 
 # ---- Stage 2: Build ----
 FROM base AS builder
